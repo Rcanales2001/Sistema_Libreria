@@ -1,0 +1,812 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="SistemaFacturacion" Class="PedidosDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=.;Initial Catalog=SistemaFacturacion;Integrated Security=True" SettingsObjectName="ModeloDatos.Properties.Settings" SettingsPropertyName="SistemaFacturacionConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Detalle" Member="Detalle">
+    <Type Name="Detalle">
+      <Column Name="num_fact" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IdProducto" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CantidadVenta" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PrecioVenta" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Importe" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="idDetalle" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Association Name="Facturas_Detalle" Member="Facturas" ThisKey="num_fact" OtherKey="num_fact" Type="Facturas" IsForeignKey="true" />
+      <Association Name="Producto_Detalle" Member="Producto" ThisKey="IdProducto" OtherKey="IdProducto" Type="Producto" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Facturas" Member="Facturas">
+    <Type Name="Facturas">
+      <Column Name="num_fact" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="IdVendedor" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IdCliente" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Sub_total" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Igv" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Total" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Fecha" Type="System.DateTime" DbType="SmallDateTime NOT NULL" CanBeNull="false" />
+      <Column Name="FgEli" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="MotivoEli" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Association Name="Facturas_Detalle" Member="Detalle" ThisKey="num_fact" OtherKey="num_fact" Type="Detalle" />
+      <Association Name="Facturas_ComprobantePago" Member="ComprobantePago" ThisKey="num_fact" OtherKey="IdPedido" Type="ComprobantePago" />
+      <Association Name="Cliente_Facturas" Member="Cliente" ThisKey="IdCliente" OtherKey="IdCliente" Type="Cliente" IsForeignKey="true" />
+      <Association Name="Vendedor_Facturas" Member="Vendedor" ThisKey="IdVendedor" OtherKey="IdVendedor" Type="Vendedor" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Producto" Member="Producto">
+    <Type Name="Producto">
+      <Column Name="IdProducto" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="NombreProducto" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="PCProducto" Type="System.Decimal" DbType="Decimal(9,2) NOT NULL" CanBeNull="false" />
+      <Column Name="PVProducto" Type="System.Decimal" DbType="Decimal(9,2) NOT NULL" CanBeNull="false" />
+      <Column Name="StockProducto" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="FechaActProducto" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="MarcaProducto" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="UnidMedProducto" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="EstadoProducto" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="Producto_Detalle" Member="Detalle" ThisKey="IdProducto" OtherKey="IdProducto" Type="Detalle" />
+      <Association Name="Producto_DetalleCompra" Member="DetalleCompra" ThisKey="IdProducto" OtherKey="idProducto" Type="DetalleCompra" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ComprobantePago" Member="ComprobantePago">
+    <Type Name="ComprobantePago">
+      <Column Name="IdComprobantePago" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="NroComprobante" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IdPedido" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IdTipoComp" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="MotivoEli" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Estado" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Association Name="Facturas_ComprobantePago" Member="Facturas" ThisKey="IdPedido" OtherKey="num_fact" Type="Facturas" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+      <Association Name="TipoComprobantePago_ComprobantePago" Member="TipoComprobantePago" ThisKey="IdTipoComp" OtherKey="IdTipoComprobantePago" Type="TipoComprobantePago" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Compra" Member="Compra">
+    <Type Name="Compra">
+      <Column Name="idCompra" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="idVendedor" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="idProveedor" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Subtotal" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Igv" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="TotalCompra" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="fechaCompra" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="CpEli" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="MotivoEli" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Association Name="Compra_DetalleCompra" Member="DetalleCompra" ThisKey="idCompra" OtherKey="idCompra" Type="DetalleCompra" />
+      <Association Name="Compra_ComprobantePagoEntradas" Member="ComprobantePagoEntradas" ThisKey="idCompra" OtherKey="IdCompra" Type="ComprobantePagoEntradas" />
+      <Association Name="Proveedor_Compra" Member="Proveedor" ThisKey="idProveedor" OtherKey="idProveedor" Type="Proveedor" IsForeignKey="true" />
+      <Association Name="Vendedor_Compra" Member="Vendedor" ThisKey="idVendedor" OtherKey="IdVendedor" Type="Vendedor" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Proveedor" Member="Proveedors">
+    <Type Name="Proveedor">
+      <Column Name="idProveedor" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="nombreProveedor" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="RUCProveedor" Type="System.String" DbType="VarChar(11)" CanBeNull="true" />
+      <Column Name="direccionProveedor" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="TelefonoProveedor" Type="System.String" DbType="VarChar(11)" CanBeNull="true" />
+      <Column Name="FechaRegistro" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="EstadoProveedor" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Association Name="Proveedor_Compra" Member="Compras" ThisKey="idProveedor" OtherKey="idProveedor" Type="Compra" />
+    </Type>
+  </Table>
+  <Table Name="dbo.DetalleCompra" Member="DetalleCompra">
+    <Type Name="DetalleCompra">
+      <Column Name="idCompra" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="idProducto" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="cantidadCompra" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="precioCompra" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="ImporteCompra" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="idDetalleC" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Association Name="Compra_DetalleCompra" Member="Compra" ThisKey="idCompra" OtherKey="idCompra" Type="Compra" IsForeignKey="true" />
+      <Association Name="Producto_DetalleCompra" Member="Producto" ThisKey="idProducto" OtherKey="IdProducto" Type="Producto" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Cliente" Member="Cliente">
+    <Type Name="Cliente">
+      <Column Name="IdCliente" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="NombreCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="ApellidoCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="DNICliente" Type="System.String" DbType="VarChar(8) NOT NULL" CanBeNull="false" />
+      <Column Name="RUCCliente" Type="System.String" DbType="VarChar(11)" CanBeNull="true" />
+      <Column Name="TelefonoCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="DireccionCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="EstadoCliente" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="Cliente_Facturas" Member="Facturas" ThisKey="IdCliente" OtherKey="IdCliente" Type="Facturas" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TipoComprobantePago" Member="TipoComprobantePago">
+    <Type Name="TipoComprobantePago">
+      <Column Name="IdTipoComprobantePago" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="nombre" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Association Name="TipoComprobantePago_ComprobantePago" Member="ComprobantePago" ThisKey="IdTipoComprobantePago" OtherKey="IdTipoComp" Type="ComprobantePago" />
+      <Association Name="TipoComprobantePago_ComprobantePagoEntradas" Member="ComprobantePagoEntradas" ThisKey="IdTipoComprobantePago" OtherKey="idTipoCompCompra" Type="ComprobantePagoEntradas" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ComprobantePagoEntradas" Member="ComprobantePagoEntradas">
+    <Type Name="ComprobantePagoEntradas">
+      <Column Name="IdComPagoEntradas" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="NroComprobante" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IdCompra" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="idTipoCompCompra" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="fecha" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="Estado" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="Compra_ComprobantePagoEntradas" Member="Compra" ThisKey="IdCompra" OtherKey="idCompra" Type="Compra" IsForeignKey="true" />
+      <Association Name="TipoComprobantePago_ComprobantePagoEntradas" Member="TipoComprobantePago" ThisKey="idTipoCompCompra" OtherKey="IdTipoComprobantePago" Type="TipoComprobantePago" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Vendedor" Member="Vendedor">
+    <Type Name="Vendedor">
+      <Column Name="IdVendedor" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="NombreVendedor" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="ApellidoVendedor" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="DireccionVendedor" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="DNIVendedor" Type="System.String" DbType="VarChar(8) NOT NULL" CanBeNull="false" />
+      <Column Name="EstadoVendedor" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="Vendedor_Facturas" Member="Facturas" ThisKey="IdVendedor" OtherKey="IdVendedor" Type="Facturas" />
+      <Association Name="Vendedor_Compra" Member="Compra" ThisKey="IdVendedor" OtherKey="idVendedor" Type="Compra" />
+      <Association Name="Vendedor_Usuarios" Member="Usuarios" ThisKey="IdVendedor" OtherKey="IdVendedor" Type="Usuarios" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Usuarios" Member="Usuarios">
+    <Type Name="Usuarios">
+      <Column Name="IdUsuario" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="login" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="password" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="IdVendedor" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Vendedor_Usuarios" Member="Vendedor" ThisKey="IdVendedor" OtherKey="IdVendedor" Type="Vendedor" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Function Name="dbo.SP_Actualizar_Cliente" Method="SP_Actualizar_Cliente">
+    <Parameter Name="idCliente" Type="System.Int32" DbType="Int" />
+    <Parameter Name="nomCliente" Type="System.String" DbType="VarChar(30)" />
+    <Parameter Name="apeCliente" Type="System.String" DbType="VarChar(30)" />
+    <Parameter Name="dniCliente" Type="System.String" DbType="VarChar(8)" />
+    <Parameter Name="rucCliente" Type="System.String" DbType="VarChar(11)" />
+    <Parameter Name="telCliente" Type="System.String" DbType="VarChar(10)" />
+    <Parameter Name="dirCliente" Type="System.String" DbType="VarChar(30)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.Sp_MostrarDetalleReporte" Method="Sp_MostrarDetalleReporte">
+    <Parameter Name="num_fact" Type="System.Int32" DbType="Int" />
+    <ElementType Name="Sp_MostrarDetalleReporteResult">
+      <Column Name="num_fact" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Descripcion" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="[Precio Venta]" Member="Precio_Venta" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Cantidad" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Importe" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_Actualizar_Producto" Method="SP_Actualizar_Producto">
+    <Parameter Name="idProducto" Type="System.Int32" DbType="Int" />
+    <Parameter Name="nomProducto" Type="System.String" DbType="VarChar(30)" />
+    <Parameter Name="PcProducto" Parameter="pcProducto" Type="System.Decimal" DbType="Decimal(18,2)" />
+    <Parameter Name="PvProducto" Parameter="pvProducto" Type="System.Decimal" DbType="Decimal(18,2)" />
+    <Parameter Name="StockProducto" Parameter="stockProducto" Type="System.Int32" DbType="Int" />
+    <Parameter Name="FechaActProducto" Parameter="fechaActProducto" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="MarcaProducto" Parameter="marcaProducto" Type="System.String" DbType="VarChar(30)" />
+    <Parameter Name="UnidMedProducto" Parameter="unidMedProducto" Type="System.String" DbType="VarChar(30)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.Sp_BuscarCliente" Method="Sp_BuscarCliente">
+    <Parameter Name="idCliente" Type="System.Int32" DbType="Int" />
+    <ElementType Name="Sp_BuscarClienteResult">
+      <Column Name="IdCliente" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NombreCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="ApellidoCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="DNICliente" Type="System.String" DbType="VarChar(8) NOT NULL" CanBeNull="false" />
+      <Column Name="RUCCliente" Type="System.String" DbType="VarChar(11)" CanBeNull="true" />
+      <Column Name="TelefonoCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="DireccionCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="EstadoCliente" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.Sp_BuscarCliente_DNI" Method="Sp_BuscarCliente_DNI">
+    <Parameter Name="dniCliente" Type="System.String" DbType="VarChar(8)" />
+    <ElementType Name="Sp_BuscarCliente_DNIResult">
+      <Column Name="IdCliente" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NombreCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="ApellidoCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="DNICliente" Type="System.String" DbType="VarChar(8) NOT NULL" CanBeNull="false" />
+      <Column Name="RUCCliente" Type="System.String" DbType="VarChar(11)" CanBeNull="true" />
+      <Column Name="TelefonoCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="DireccionCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="EstadoCliente" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.Sp_BuscarProducto" Method="Sp_BuscarProducto">
+    <Parameter Name="idProducto" Type="System.Int32" DbType="Int" />
+    <ElementType Name="Sp_BuscarProductoResult">
+      <Column Name="IdProducto" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NombreProducto" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="PCProducto" Type="System.Decimal" DbType="Decimal(9,2) NOT NULL" CanBeNull="false" />
+      <Column Name="PVProducto" Type="System.Decimal" DbType="Decimal(9,2) NOT NULL" CanBeNull="false" />
+      <Column Name="StockProducto" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="FechaActProducto" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="MarcaProducto" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="UnidMedProducto" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="EstadoProducto" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.Sp_BuscarVendedor" Method="Sp_BuscarVendedor">
+    <Parameter Name="idVendedor" Type="System.Int32" DbType="Int" />
+    <ElementType Name="Sp_BuscarVendedorResult">
+      <Column Name="IdVendedor" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NombreVendedor" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="ApellidoVendedor" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="DireccionVendedor" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="DNIVendedor" Type="System.String" DbType="VarChar(8) NOT NULL" CanBeNull="false" />
+      <Column Name="EstadoVendedor" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_Combo_Producto" Method="SP_Combo_Producto">
+    <ElementType Name="SP_Combo_ProductoResult">
+      <Column Name="IdProducto" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NombreProducto" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_Eliminar_Cliente" Method="SP_Eliminar_Cliente">
+    <Parameter Name="idCliente" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.Sp_FiltradoCliente" Method="Sp_FiltradoCliente">
+    <Parameter Name="NombreCliente" Parameter="nombreCliente" Type="System.String" DbType="VarChar(30)" />
+    <ElementType Name="Sp_FiltradoClienteResult">
+      <Column Name="Codigo" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Nombres" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.Sp_FiltrarPedidos" Method="Sp_FiltrarPedidos">
+    <Parameter Name="IdCliente" Parameter="idCliente" Type="System.Int32" DbType="Int" />
+    <ElementType Name="Sp_FiltrarPedidosResult">
+      <Column Name="num_fact" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.Sp_FiltrarProducto" Method="Sp_FiltrarProducto">
+    <Parameter Name="NombreProducto" Parameter="nombreProducto" Type="System.String" DbType="VarChar(30)" />
+    <ElementType Name="Sp_FiltrarProductoResult">
+      <Column Name="Codigo" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Descripcion" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_Generar_Cod_Cliente" Method="SP_Generar_Cod_Cliente">
+    <ElementType Name="SP_Generar_Cod_ClienteResult">
+      <Column Name="CodCliente" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_Generar_Codigo_Cliente" Method="SP_Generar_Codigo_Cliente">
+    <ElementType Name="SP_Generar_Codigo_ClienteResult">
+      <Column Name="CodCliente" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_Generar_Codigo_Factura" Method="SP_Generar_Codigo_Factura">
+    <ElementType Name="SP_Generar_Codigo_FacturaResult">
+      <Column Name="NumFactura" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_Generar_Codigo_Producto" Method="SP_Generar_Codigo_Producto">
+    <ElementType Name="SP_Generar_Codigo_ProductoResult">
+      <Column Name="CodProducto" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.Sp_GrabarDetalle" Method="Sp_GrabarDetalle">
+    <Parameter Name="Num_fact" Parameter="num_fact" Type="System.Int32" DbType="Int" />
+    <Parameter Name="IdPoducto" Parameter="idPoducto" Type="System.Int32" DbType="Int" />
+    <Parameter Name="CantidadVenta" Parameter="cantidadVenta" Type="System.Int32" DbType="Int" />
+    <Parameter Name="PrecioVenta" Parameter="precioVenta" Type="System.Decimal" DbType="Decimal(18,2)" />
+    <Parameter Name="Importe" Parameter="importe" Type="System.Decimal" DbType="Decimal(18,2)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.Sp_GrabarDetalle_Venta" Method="Sp_GrabarDetalle_Venta">
+    <Parameter Name="Num_fact" Parameter="num_fact" Type="System.Int32" DbType="Int" />
+    <Parameter Name="IdProducto" Parameter="idProducto" Type="System.Int32" DbType="Int" />
+    <Parameter Name="CantidadVenta" Parameter="cantidadVenta" Type="System.Int32" DbType="Int" />
+    <Parameter Name="PrecioVenta" Parameter="precioVenta" Type="System.Decimal" DbType="Decimal(18,2)" />
+    <Parameter Name="Importe" Parameter="importe" Type="System.Decimal" DbType="Decimal(18,2)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.Sp_GrabarFactura" Method="Sp_GrabarFactura">
+    <Parameter Name="Num_Fact" Parameter="num_Fact" Type="System.Int32" DbType="Int" />
+    <Parameter Name="IdVendedor" Parameter="idVendedor" Type="System.Int32" DbType="Int" />
+    <Parameter Name="IdCliente" Parameter="idCliente" Type="System.Int32" DbType="Int" />
+    <Parameter Name="Sub_Total" Parameter="sub_Total" Type="System.Decimal" DbType="Decimal(18,2)" />
+    <Parameter Name="Igv" Parameter="igv" Type="System.Decimal" DbType="Decimal(18,2)" />
+    <Parameter Name="total" Type="System.Decimal" DbType="Decimal(18,2)" />
+    <Parameter Name="fecha" Type="System.DateTime" DbType="SmallDateTime" />
+    <Parameter Name="FgEli" Parameter="fgEli" Type="System.Boolean" DbType="Bit" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_Insertar_Cliente" Method="SP_Insertar_Cliente">
+    <Parameter Name="idCliente" Type="System.Int32" DbType="Int" />
+    <Parameter Name="nomCliente" Type="System.String" DbType="VarChar(30)" />
+    <Parameter Name="apeCliente" Type="System.String" DbType="VarChar(30)" />
+    <Parameter Name="dniCliente" Type="System.String" DbType="VarChar(8)" />
+    <Parameter Name="rucCliente" Type="System.String" DbType="VarChar(11)" />
+    <Parameter Name="telCliente" Type="System.String" DbType="VarChar(10)" />
+    <Parameter Name="dirCliente" Type="System.String" DbType="VarChar(30)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_Insertar_Producto" Method="SP_Insertar_Producto">
+    <Parameter Name="idProducto" Type="System.Int32" DbType="Int" />
+    <Parameter Name="nomCProducto" Type="System.String" DbType="VarChar(30)" />
+    <Parameter Name="PcProducto" Parameter="pcProducto" Type="System.String" DbType="VarChar(30)" />
+    <Parameter Name="PvProducto" Parameter="pvProducto" Type="System.String" DbType="VarChar(8)" />
+    <Parameter Name="StockProducto" Parameter="stockProducto" Type="System.Int32" DbType="Int" />
+    <Parameter Name="FechaActProducto" Parameter="fechaActProducto" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="MarcaProducto" Parameter="marcaProducto" Type="System.String" DbType="VarChar(30)" />
+    <Parameter Name="UnidMedProducto" Parameter="unidMedProducto" Type="System.String" DbType="VarChar(30)" />
+    <Parameter Name="EstadoProducto" Parameter="estadoProducto" Type="System.Boolean" DbType="Bit" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_Insertar_Vendedor" Method="SP_Insertar_Vendedor">
+    <Parameter Name="idVendedor" Type="System.Int32" DbType="Int" />
+    <Parameter Name="NombreVendedor" Parameter="nombreVendedor" Type="System.String" DbType="VarChar(30)" />
+    <Parameter Name="ApellidoVendedor" Parameter="apellidoVendedor" Type="System.String" DbType="VarChar(30)" />
+    <Parameter Name="DireccionVendedor" Parameter="direccionVendedor" Type="System.String" DbType="VarChar(30)" />
+    <Parameter Name="DNIVendedor" Parameter="dNIVendedor" Type="System.String" DbType="VarChar(8)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_Listar_Clientes" Method="SP_Listar_Clientes">
+    <ElementType Name="SP_Listar_ClientesResult">
+      <Column Name="IdCliente" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NombreCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="ApellidoCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="DNICliente" Type="System.String" DbType="VarChar(8) NOT NULL" CanBeNull="false" />
+      <Column Name="RUCCliente" Type="System.String" DbType="VarChar(11)" CanBeNull="true" />
+      <Column Name="TelefonoCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="DireccionCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_LISTAR_DETALLE_IMP" Method="SP_LISTAR_DETALLE_IMP">
+    <Parameter Name="num_fact" Type="System.Int32" DbType="Int" />
+    <ElementType Name="SP_LISTAR_DETALLE_IMPResult">
+      <Column Name="num_fact" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NombreProducto" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="CantidadVenta" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PrecioVenta" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Importe" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_LISTAR_FACTURA_IMP" Method="SP_LISTAR_FACTURA_IMP">
+    <Parameter Name="num_fact" Type="System.Int32" DbType="Int" />
+    <Parameter Name="LETRAS" Parameter="lETRAS" Type="System.String" DbType="VarChar(MAX)" />
+    <Parameter Name="MONTO1" Parameter="mONTO1" Type="System.Decimal" DbType="Money" />
+    <Parameter Name="MONTO2" Parameter="mONTO2" Type="System.Decimal" DbType="Money" />
+    <Parameter Name="MONTO3" Parameter="mONTO3" Type="System.Decimal" DbType="Money" />
+    <ElementType Name="SP_LISTAR_FACTURA_IMPResult">
+      <Column Name="num_fact" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Cliente" Type="System.String" DbType="VarChar(61) NOT NULL" CanBeNull="false" />
+      <Column Name="DireccionCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="RUCCliente" Type="System.String" DbType="VarChar(11)" CanBeNull="true" />
+      <Column Name="TelefonoCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="Igv" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Empleado" Type="System.String" DbType="VarChar(61) NOT NULL" CanBeNull="false" />
+      <Column Name="Letras" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="MONTO1" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Column Name="MONTO2" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Column Name="MONTO3" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.Sp_Listar_Facturas" Method="Sp_Listar_Facturas">
+    <Parameter Name="num_Fact" Type="System.Int32" DbType="Int" />
+    <ElementType Name="Sp_Listar_FacturasResult">
+      <Column Name="num_fact" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DatosCliente" Type="System.String" DbType="VarChar(61) NOT NULL" CanBeNull="false" />
+      <Column Name="Fecha" Type="System.String" DbType="Char(10)" CanBeNull="true" />
+      <Column Name="Igv" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Sub_total" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Total" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="DireccionCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="RUCCliente" Type="System.String" DbType="VarChar(11)" CanBeNull="true" />
+      <Column Name="TelefonoCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.Sp_Listar_Facturas_Pedido" Method="Sp_Listar_Facturas_Pedido">
+    <ElementType Name="Sp_Listar_Facturas_PedidoResult">
+      <Column Name="num_fact" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DatosCliente" Type="System.String" DbType="VarChar(61) NOT NULL" CanBeNull="false" />
+      <Column Name="DireccionCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="Fecha" Type="System.DateTime" DbType="SmallDateTime NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_Listar_Pedidos_By_Fechas" Method="SP_Listar_Pedidos_By_Fechas">
+    <Parameter Name="fechaInicial" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="fechaFinal" Type="System.DateTime" DbType="Date" />
+    <ElementType Name="SP_Listar_Pedidos_By_FechasResult">
+      <Column Name="num_fact" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DatosCliente" Type="System.String" DbType="VarChar(61) NOT NULL" CanBeNull="false" />
+      <Column Name="DireccionCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="Fecha" Type="System.DateTime" DbType="SmallDateTime NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_Listar_Pedidos_By_IdPedido" Method="SP_Listar_Pedidos_By_IdPedido">
+    <Parameter Name="idPedido" Type="System.Int32" DbType="Int" />
+    <ElementType Name="SP_Listar_Pedidos_By_IdPedidoResult">
+      <Column Name="num_fact" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DatosCliente" Type="System.String" DbType="VarChar(61) NOT NULL" CanBeNull="false" />
+      <Column Name="DireccionCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="Fecha" Type="System.DateTime" DbType="SmallDateTime NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_Listar_Producto" Method="SP_Listar_Producto">
+    <ElementType Name="SP_Listar_ProductoResult">
+      <Column Name="IdProducto" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NombreProducto" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="PCProducto" Type="System.Decimal" DbType="Decimal(9,2) NOT NULL" CanBeNull="false" />
+      <Column Name="PVProducto" Type="System.Decimal" DbType="Decimal(9,2) NOT NULL" CanBeNull="false" />
+      <Column Name="StockProducto" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="FechaActProducto" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="MarcaProducto" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="UnidMedProducto" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_Listar_Usuarios" Method="SP_Listar_Usuarios">
+    <Parameter Name="login" Type="System.String" DbType="VarChar(50)" />
+    <ElementType Name="SP_Listar_UsuariosResult">
+      <Column Name="IdUsuario" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="login" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="password" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="IdVendedor" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_Listar_Vendedores" Method="SP_Listar_Vendedores">
+    <ElementType Name="SP_Listar_VendedoresResult">
+      <Column Name="IdVendedor" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NombreVendedor" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="ApellidoVendedor" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="DireccionVendedor" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="DNIVendedor" Type="System.String" DbType="VarChar(8) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_LISTAR_VENTA_IMP" Method="SP_LISTAR_VENTA_IMP">
+    <Parameter Name="num_fact" Type="System.Int32" DbType="Int" />
+    <Parameter Name="LETRAS" Parameter="lETRAS" Type="System.String" DbType="VarChar(MAX)" />
+    <ElementType Name="SP_LISTAR_VENTA_IMPResult">
+      <Column Name="num_fact" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IdCliente" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Sub_total" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="igv" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Total" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Letras" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.Sp_ListDetalles" Method="Sp_ListDetalles">
+    <ElementType Name="Sp_ListDetallesResult">
+      <Column Name="num_fact" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IdProducto" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CantidadVenta" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PrecioVenta" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Importe" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="idDetalle" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.Sp_ListFacturas" Method="Sp_ListFacturas">
+    <ElementType Name="Sp_ListFacturasResult">
+      <Column Name="num_fact" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IdVendedor" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IdCliente" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Sub_total" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Igv" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Total" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Fecha" Type="System.DateTime" DbType="SmallDateTime NOT NULL" CanBeNull="false" />
+      <Column Name="FgEli" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="MotivoEli" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.Sp_MostrarDetalle" Method="Sp_MostrarDetalle">
+    <Parameter Name="num_fact" Type="System.Int32" DbType="Int" />
+    <ElementType Name="Sp_MostrarDetalleResult">
+      <Column Name="IdProducto" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Descripcion" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="Cantidad" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Precio_Venta" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Importe" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_Buscar_ClientesByNombre" Method="SP_Buscar_ClientesByNombre">
+    <Parameter Name="nombreCliente" Type="System.String" DbType="VarChar(30)" />
+    <ElementType Name="SP_Buscar_ClientesByNombreResult">
+      <Column Name="IdCliente" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NombreCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="ApellidoCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="DNICliente" Type="System.String" DbType="VarChar(8) NOT NULL" CanBeNull="false" />
+      <Column Name="RUCCliente" Type="System.String" DbType="VarChar(11)" CanBeNull="true" />
+      <Column Name="TelefonoCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="DireccionCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="EstadoCliente" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_Buscar_ProductosByNombre" Method="SP_Buscar_ProductosByNombre">
+    <Parameter Name="nombre" Type="System.String" DbType="VarChar(30)" />
+    <ElementType Name="SP_Buscar_ProductosByNombreResult">
+      <Column Name="IdProducto" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NombreProducto" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="PCProducto" Type="System.Decimal" DbType="Decimal(9,2) NOT NULL" CanBeNull="false" />
+      <Column Name="PVProducto" Type="System.Decimal" DbType="Decimal(9,2) NOT NULL" CanBeNull="false" />
+      <Column Name="StockProducto" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="FechaActProducto" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="MarcaProducto" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="UnidMedProducto" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="EstadoProducto" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_Listar_TipoCom" Method="SP_Listar_TipoCom">
+    <ElementType Name="SP_Listar_TipoComResult">
+      <Column Name="IdTipoComprobantePago" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="nombre" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_NroComprobante_Pago" Method="SP_NroComprobante_Pago">
+    <Parameter Name="IdTipoComp" Parameter="idTipoComp" Type="System.Int32" DbType="Int" />
+    <ElementType Name="SP_NroComprobante_PagoResult">
+      <Column Name="codigo" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_Insertar_Comp_Pago" Method="SP_Insertar_Comp_Pago">
+    <Parameter Name="NroComprobante" Parameter="nroComprobante" Type="System.Int32" DbType="Int" />
+    <Parameter Name="IdPedido" Parameter="idPedido" Type="System.Int32" DbType="Int" />
+    <Parameter Name="IdTipoComp" Parameter="idTipoComp" Type="System.Int32" DbType="Int" />
+    <Parameter Name="MotivoEli" Parameter="motivoEli" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="Estado" Parameter="estado" Type="System.String" DbType="VarChar(50)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_Eliminar_Producto" Method="SP_Eliminar_Producto">
+    <Parameter Name="idProducto" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_Eliminar_Proveedor" Method="SP_Eliminar_Proveedor">
+    <Parameter Name="idProveedor" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_Generar_Codigo_Proveedor" Method="SP_Generar_Codigo_Proveedor">
+    <ElementType Name="SP_Generar_Codigo_ProveedorResult">
+      <Column Name="CodProveedor" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_Insertar_Comp_Pago_Entradas" Method="SP_Insertar_Comp_Pago_Entradas">
+    <Parameter Name="NroComprobante" Parameter="nroComprobante" Type="System.Int32" DbType="Int" />
+    <Parameter Name="IdCompra" Parameter="idCompra" Type="System.Int32" DbType="Int" />
+    <Parameter Name="idTipoCompCompra" Type="System.Int32" DbType="Int" />
+    <Parameter Name="fecha" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="Estado" Parameter="estado" Type="System.String" DbType="VarChar(50)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_NroComprobante_Pagoentradas" Method="SP_NroComprobante_Pagoentradas">
+    <Parameter Name="IdTipoCompCompra" Parameter="idTipoCompCompra" Type="System.Int32" DbType="Int" />
+    <ElementType Name="SP_NroComprobante_PagoentradasResult">
+      <Column Name="codigo" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.Sp_GrabarFacturaCompra" Method="Sp_GrabarFacturaCompra">
+    <Parameter Name="idCompra" Type="System.Int32" DbType="Int" />
+    <Parameter Name="IdVendedor" Parameter="idVendedor" Type="System.Int32" DbType="Int" />
+    <Parameter Name="idProveedor" Type="System.Int32" DbType="Int" />
+    <Parameter Name="Subtotal" Parameter="subtotal" Type="System.Decimal" DbType="Decimal(18,2)" />
+    <Parameter Name="Igv" Parameter="igv" Type="System.Decimal" DbType="Decimal(18,2)" />
+    <Parameter Name="TotalCompra" Parameter="totalCompra" Type="System.Decimal" DbType="Decimal(18,2)" />
+    <Parameter Name="fechaCompra" Type="System.DateTime" DbType="SmallDateTime" />
+    <Parameter Name="CpEli" Parameter="cpEli" Type="System.Boolean" DbType="Bit" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_Listar_Compra" Method="SP_Listar_Compra" IsComposable="true">
+    <Return Type="object" />
+  </Function>
+  <Function Name="dbo.Sp_Listar_Facturas_Compras" Method="Sp_Listar_Facturas_Compras">
+    <ElementType Name="Sp_Listar_Facturas_ComprasResult">
+      <Column Name="idCompra" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DatosProveedor" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="direccionProveedor" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="fechaCompra" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.Sp_Listar_FacturasC" Method="Sp_Listar_FacturasC">
+    <Parameter Name="idCompra" Type="System.Int32" DbType="Int" />
+    <ElementType Name="Sp_Listar_FacturasCResult">
+      <Column Name="idCompra" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DatosProveedor" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Fecha" Type="System.String" DbType="Char(10)" CanBeNull="true" />
+      <Column Name="Igv" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Subtotal" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="TotalCompra" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="direccionProveedor" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="TelefonoProveedor" Type="System.String" DbType="VarChar(11)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_Listar_Ventas_By_IdCompra" Method="SP_Listar_Ventas_By_IdCompra">
+    <Parameter Name="idCompra" Type="System.Int32" DbType="Int" />
+    <ElementType Name="SP_Listar_Ventas_By_IdCompraResult">
+      <Column Name="idCompra" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DatosProveedor" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="direccionProveedor" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="fechaCompra" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_Listar_Venta_By_Fechas" Method="SP_Listar_Venta_By_Fechas">
+    <Parameter Name="fechaInicial" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="fechaFinal" Type="System.DateTime" DbType="Date" />
+    <ElementType Name="SP_Listar_Venta_By_FechasResult">
+      <Column Name="idCompra" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DatosProveedor" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="direccionProveedor" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="fechaCompra" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.Sp_MostrarDetalleReporteCompra" Method="Sp_MostrarDetalleReporteCompra">
+    <Parameter Name="idCompra" Type="System.Int32" DbType="Int" />
+    <ElementType Name="Sp_MostrarDetalleReporteCompraResult">
+      <Column Name="idCompra" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Descripcion" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="[Precio Compra]" Member="Precio_Compra" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Cantidad" Type="System.String" DbType="Char(10) NOT NULL" CanBeNull="false" />
+      <Column Name="ImporteCompra" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_Actualizar_Proveedor" Method="SP_Actualizar_Proveedor">
+    <Parameter Name="idProveedor" Type="System.Int32" DbType="Int" />
+    <Parameter Name="nombreProveedor" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="RUCProveedor" Parameter="rUCProveedor" Type="System.String" DbType="VarChar(11)" />
+    <Parameter Name="direccionProveedor" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="TelefonoProveedor" Parameter="telefonoProveedor" Type="System.String" DbType="VarChar(11)" />
+    <Parameter Name="FechaRegistro" Parameter="fechaRegistro" Type="System.DateTime" DbType="Date" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.Sp_BuscarProveedor" Method="Sp_BuscarProveedor">
+    <Parameter Name="idProveedor" Type="System.Int32" DbType="Int" />
+    <ElementType Name="Sp_BuscarProveedorResult">
+      <Column Name="idProveedor" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="nombreProveedor" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="RUCProveedor" Type="System.String" DbType="VarChar(11)" CanBeNull="true" />
+      <Column Name="direccionProveedor" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="TelefonoProveedor" Type="System.String" DbType="VarChar(11)" CanBeNull="true" />
+      <Column Name="FechaRegistro" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="EstadoProveedor" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_Insertar_Proveedor" Method="SP_Insertar_Proveedor">
+    <Parameter Name="idProveedor" Type="System.Int32" DbType="Int" />
+    <Parameter Name="nombreProveedor" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="RUCProveedor" Parameter="rUCProveedor" Type="System.String" DbType="VarChar(11)" />
+    <Parameter Name="direccionProveedor" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="TelefonoProveedor" Parameter="telefonoProveedor" Type="System.String" DbType="VarChar(11)" />
+    <Parameter Name="FechaRegistro" Parameter="fechaRegistro" Type="System.DateTime" DbType="Date" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_Generar_Codigo_Compra" Method="SP_Generar_Codigo_Compra">
+    <ElementType Name="SP_Generar_Codigo_CompraResult">
+      <Column Name="CodCompra" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_Listar_Proveedores" Method="SP_Listar_Proveedores">
+    <ElementType Name="SP_Listar_ProveedoresResult">
+      <Column Name="idProveedor" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="nombreProveedor" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="RUCProveedor" Type="System.String" DbType="VarChar(11)" CanBeNull="true" />
+      <Column Name="direccionProveedor" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="TelefonoProveedor" Type="System.String" DbType="VarChar(11)" CanBeNull="true" />
+      <Column Name="FechaRegistro" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_Insertar_Compra" Method="SP_Insertar_Compra">
+    <Parameter Name="idCompra" Type="System.Int32" DbType="Int" />
+    <Parameter Name="fechacompra" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="subtotal" Type="System.Decimal" DbType="Decimal(18,2)" />
+    <Parameter Name="Igv" Parameter="igv" Type="System.Decimal" DbType="Decimal(18,2)" />
+    <Parameter Name="TotalCompra" Parameter="totalCompra" Type="System.Decimal" DbType="Decimal(18,2)" />
+    <Parameter Name="idVendedor" Type="System.Int32" DbType="Int" />
+    <Parameter Name="idProveedor" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.Sp_GrabarDetalle_Compra" Method="Sp_GrabarDetalle_Compra">
+    <Parameter Name="idCompra" Type="System.Int32" DbType="Int" />
+    <Parameter Name="idProducto" Type="System.Int32" DbType="Int" />
+    <Parameter Name="cantidadCompra" Type="System.Int32" DbType="Int" />
+    <Parameter Name="precioCompra" Type="System.Decimal" DbType="Decimal(18,2)" />
+    <Parameter Name="ImporteCompra" Parameter="importeCompra" Type="System.Decimal" DbType="Decimal(18,2)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.Sp_MostrarDetalleCompra" Method="Sp_MostrarDetalleCompra">
+    <Parameter Name="idCompra" Type="System.Int32" DbType="Int" />
+    <ElementType Name="Sp_MostrarDetalleCompraResult">
+      <Column Name="IdProducto" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Descripcion" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="Cantidad" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Precio_Venta" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="ImporteCompra" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_LISTAR_DETALLEC_IMP" Method="SP_LISTAR_DETALLEC_IMP">
+    <Parameter Name="idCodigo" Type="System.Int32" DbType="Int" />
+    <ElementType Name="SP_LISTAR_DETALLEC_IMPResult">
+      <Column Name="idCompra" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NombreProducto" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="cantidadCompra" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="precioCompra" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="ImporteCompra" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_LISTAR_FACTURAC_IMP" Method="SP_LISTAR_FACTURAC_IMP">
+    <Parameter Name="idCompra" Type="System.Int32" DbType="Int" />
+    <Parameter Name="LETRAS" Parameter="lETRAS" Type="System.String" DbType="VarChar(MAX)" />
+    <Parameter Name="MONTO1" Parameter="mONTO1" Type="System.Decimal" DbType="Money" />
+    <Parameter Name="MONTO2" Parameter="mONTO2" Type="System.Decimal" DbType="Money" />
+    <Parameter Name="MONTO3" Parameter="mONTO3" Type="System.Decimal" DbType="Money" />
+    <ElementType Name="SP_LISTAR_FACTURAC_IMPResult">
+      <Column Name="idCompra" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Proveedor" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="direccionProveedor" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="RUCProveedor" Type="System.String" DbType="VarChar(11) NOT NULL" CanBeNull="false" />
+      <Column Name="TelefonoProveedor" Type="System.String" DbType="VarChar(11) NOT NULL" CanBeNull="false" />
+      <Column Name="Igv" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Empleado" Type="System.String" DbType="VarChar(61) NOT NULL" CanBeNull="false" />
+      <Column Name="Letras" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="MONTO1" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Column Name="MONTO2" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Column Name="MONTO3" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_LISTAR_COMPRA_IMP" Method="SP_LISTAR_COMPRA_IMP">
+    <Parameter Name="idCompra" Type="System.Int32" DbType="Int" />
+    <Parameter Name="LETRAS" Parameter="lETRAS" Type="System.String" DbType="VarChar(MAX)" />
+    <ElementType Name="SP_LISTAR_COMPRA_IMPResult">
+      <Column Name="idCompra" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="idProveedor" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Subtotal" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="igv" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="TotalCompra" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Letras" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_LISTAR_PRODUCTOS_IMP" Method="SP_LISTAR_PRODUCTOS_IMP">
+    <Parameter Name="idProducto" Type="System.Int32" DbType="Int" />
+    <ElementType Name="SP_LISTAR_PRODUCTOS_IMPResult">
+      <Column Name="IdProducto" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NombreProducto" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="PCProducto" Type="System.Decimal" DbType="Decimal(9,2) NOT NULL" CanBeNull="false" />
+      <Column Name="PVProducto" Type="System.Decimal" DbType="Decimal(9,2) NOT NULL" CanBeNull="false" />
+      <Column Name="StockProducto" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="FechaActProducto" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="MarcaProducto" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="UnidMedProducto" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_LISTAR_PROVEEDORES_IMP" Method="SP_LISTAR_PROVEEDORES_IMP">
+    <Parameter Name="idProveedor" Type="System.Int32" DbType="Int" />
+    <ElementType Name="SP_LISTAR_PROVEEDORES_IMPResult">
+      <Column Name="idProveedor" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="nombreProveedor" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="RUCProveedor" Type="System.String" DbType="VarChar(11) NOT NULL" CanBeNull="false" />
+      <Column Name="direccionProveedor" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="TelefonoProveedor" Type="System.String" DbType="VarChar(11) NOT NULL" CanBeNull="false" />
+      <Column Name="FechaRegistro" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_LISTAR_CLIENTE_IMP" Method="SP_LISTAR_CLIENTE_IMP">
+    <Parameter Name="idCliente" Type="System.Int32" DbType="Int" />
+    <ElementType Name="SP_LISTAR_CLIENTE_IMPResult">
+      <Column Name="IdCliente" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Cliente" Type="System.String" DbType="VarChar(61) NOT NULL" CanBeNull="false" />
+      <Column Name="DNICliente" Type="System.String" DbType="VarChar(8) NOT NULL" CanBeNull="false" />
+      <Column Name="TelefonoCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="DireccionCliente" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_Buscar_ProveedoresByNombre" Method="SP_Buscar_ProveedoresByNombre">
+    <Parameter Name="nombreProveedor" Type="System.String" DbType="VarChar(30)" />
+    <ElementType Name="SP_Buscar_ProveedoresByNombreResult">
+      <Column Name="idProveedor" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="nombreProveedor" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="RUCProveedor" Type="System.String" DbType="VarChar(11) NOT NULL" CanBeNull="false" />
+      <Column Name="direccionProveedor" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="TelefonoProveedor" Type="System.String" DbType="VarChar(11) NOT NULL" CanBeNull="false" />
+      <Column Name="FechaRegistro" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="EstadoProveedor" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_Actualizar_Vendedor" Method="SP_Actualizar_Vendedor">
+    <Parameter Name="idVendedor" Type="System.Int32" DbType="Int" />
+    <Parameter Name="nomCliente" Type="System.String" DbType="VarChar(30)" />
+    <Parameter Name="apeCliente" Type="System.String" DbType="VarChar(30)" />
+    <Parameter Name="dniCliente" Type="System.String" DbType="VarChar(8)" />
+    <Parameter Name="dirCliente" Type="System.String" DbType="VarChar(30)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_Eliminar_Vendedor" Method="SP_Eliminar_Vendedor">
+    <Parameter Name="idVendedor" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Int32" />
+  </Function>
+</Database>
